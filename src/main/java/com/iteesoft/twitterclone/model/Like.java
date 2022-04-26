@@ -1,26 +1,30 @@
 package com.iteesoft.twitterclone.model;
 
+
 import lombok.*;
-
 import javax.persistence.*;
-
-import java.time.Instant;
-import java.util.List;
-
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Getter
 @Setter
-@Builder
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "posts")
-public class Post extends Base{
-    private String message;
+@Builder
+@Table(name = "likes")
+public class Like {
+
+    @Id
+    @GeneratedValue(strategy = IDENTITY)
+    private Long id;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> comments;
+
+    @ManyToOne
+    @JoinColumn(name = "post_id")
+    private Post post;
+
+
 }

@@ -16,56 +16,56 @@ public class AppController {
 
     private final UserService userService;
 
-    @PostMapping("/newAccount")
+    @PostMapping("/users")
     public ResponseEntity<?> createAccount(@RequestBody UserDto userInfo) {
         return new ResponseEntity<>(userService.create(userInfo), HttpStatus.CREATED);
     }
 
-    @PostMapping("/newPost/{id}")
+    @PostMapping("/users/{id}/posts")
     public ResponseEntity<?> createPost(@PathVariable Long id, @RequestBody String message) {
         return new ResponseEntity<>(userService.create(message, id), HttpStatus.CREATED);
     }
 
-    @PostMapping("/follow/{id}")
-    public ResponseEntity<?> follow(@RequestParam Long userId, @PathVariable Long id) {
+    @PostMapping("/users/{id}/follow/{userId}")
+    public ResponseEntity<?> follow(@PathVariable Long userId, @PathVariable Long id) {
         userService.follow(id, userId);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/unfollow/{id}")
-    public ResponseEntity<?> unfollow(@RequestParam Long userId, @PathVariable Long id) {
+    @PostMapping("/users/{id}/unfollow/{userId}")
+    public ResponseEntity<?> unfollow(@PathVariable Long userId, @PathVariable Long id) {
         userService.unFollow(id, userId);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/posts/{id}")
+    @GetMapping("/users/{id}/posts")
     public ResponseEntity<?> viewPosts(@PathVariable Long id) {
         return new ResponseEntity<>(userService.viewUserPosts(id), OK);
     }
 
-    @PostMapping("/likePost/{id}")
+    @PostMapping("/users/{id}/Posts/{id}/like")
     public ResponseEntity<?> likePost(@RequestParam Long userId, @PathVariable Long id) {
         userService.likePost(userId, id);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/unlikePost/{id}")
+    @PostMapping("/users/{id}/Posts/{id}/unlike")
     public ResponseEntity<?> unlikePost(@RequestParam Long userId, @PathVariable Long id) {
         userService.likePost(userId, id);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/followers/{id}")
+    @GetMapping("/users/{id}/followers")
     public ResponseEntity<?> viewFollowers(@PathVariable Long id) {
         return new ResponseEntity<> (userService.viewFollowers(id), OK);
     }
 
-    @GetMapping("/following/{id}")
+    @GetMapping("/users/{id}/following")
     public ResponseEntity<?> viewFollowing(@PathVariable Long id) {
         return new ResponseEntity<> (userService.viewFollowing(id), OK);
     }
 
-    @GetMapping("/timeline/{id}")
+    @GetMapping("/users/{id}/timeline")
     public ResponseEntity<?> viewTimeline(@PathVariable Long id) {
         return new ResponseEntity<>(userService.viewTimeline(id), OK);
     }
