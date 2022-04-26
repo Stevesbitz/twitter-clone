@@ -5,6 +5,7 @@ import com.iteesoft.twitterclone.model.Post;
 import com.iteesoft.twitterclone.model.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
     User create(UserDto userInfo);
@@ -22,4 +23,10 @@ public interface UserService {
     void likePost(Long userId, Long postId);
 
     void unlikePost(Long userId, Long postId);
+
+    User updatedUser(UserDto user, long id);
+
+    User getUserById(long id);
+
+    void deleteUser(long id);
 }

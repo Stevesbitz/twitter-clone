@@ -35,10 +35,15 @@ public class UserServiceImpl implements UserService {
         if (userExist) {
             throw new AlreadyExistsException("User already exist with email "+userInfo.getEmail());
         }
+        User user = saveUser(userInfo);
+        log.info(user.getName() + " created successfully");
+        return user;
+    }
+
+    private User saveUser(UserDto userInfo) {
         User user = User.builder().name(userInfo.getName()).username(userInfo.getUsername())
                 .password(userInfo.getPassword()).email(userInfo.getEmail()).build();
         userRepo.save(user);
-        log.info(user.getName() + " created successfully");
         return user;
     }
 
@@ -64,7 +69,7 @@ public class UserServiceImpl implements UserService {
         Optional<Follow> mapping = getFollowMapping(followerId, userId);
 
         if (mapping.isEmpty() && !followerId.equals(userId)) {
-            Follow newFollow = new Follow(getUser(followerId), getUser(userId));
+            Follow newFollow = new Follow(getUserById(followerId), getUserById(userId));
             followRepo.save(newFollow);
         }
         log.info("user: "+followerId + " followed user: " + userId);
@@ -82,7 +87,7 @@ public class UserServiceImpl implements UserService {
         return followRepo.findByFollowerAndFollowed(follower, followed);
     }
 
-    private User getUser(Long id) {
+    private User getUserById(Long id) {
         return userRepo.findById(id).orElseThrow(()-> new AppException("User does not exist"));
     }
 
@@ -145,5 +150,27 @@ public class UserServiceImpl implements UserService {
         Optional<Like> existingLike = likeRepo.findByUserAndPost(user, post);
         existingLike.ifPresent(likeRepo::delete);
         log.info("Post unliked by "+ user.getName());
+    }
+
+    @Override
+    public User updatedUser(UserDto user, long id) {
+        User userInDb = getUserById(id);
+        if (userInDb != null) {
+            saveUser(user);
+        }
+        return userInDb;
+    }
+
+    @Override
+    public User getUserById(long id) {
+        return userRepo.findById(id).orElseThrow(()-> new AppException("User not found!"));
+    }
+
+    @Override
+    public void deleteUser(long id) {
+        User user = getUserById(id);
+        if (user != null) {
+            userRepo.deleteById(id);
+        }
     }
 }
